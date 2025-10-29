@@ -272,72 +272,10 @@ static GimpProcedure *gimp_vtf_create_procedure(GimpPlugIn *plugin, const gchar 
             "\nRecommended: RGB888 for regular textures without alpha."
             "\nIf you're developing specifically for an engine based on Strata Source, then use BC7.",
             choice_image_format,
-            // TODO: Change this selection based on whether or not the current image has alpha?
             "RGB888",
             G_PARAM_READWRITE
         );
 
-//        GimpChoice *choice_alpha_image_format = gimp_choice_new_with_values(
-//                "RGBA8888",                     (int)vtfpp::ImageFormat::RGBA8888, "RGBA8888", NULL,
-//                "ABGR8888",                     (int)vtfpp::ImageFormat::ABGR8888, "ABGR8888", NULL,
-//                "RGB888",                       (int)vtfpp::ImageFormat::RGB888, "RGB888", NULL,
-//                "BGR888",                       (int)vtfpp::ImageFormat::BGR888, "BGR888", NULL,
-//                "RGB565",                       (int)vtfpp::ImageFormat::RGB565, "RGB565", NULL,
-//                "I8",                           (int)vtfpp::ImageFormat::I8, "I8", NULL,
-//                "IA88",                         (int)vtfpp::ImageFormat::IA88, "IA88", NULL,
-//                "P8",                           (int)vtfpp::ImageFormat::P8, "P8", NULL,
-//                "A8",                           (int)vtfpp::ImageFormat::A8, "A8", NULL,
-//                "RGB888_BLUESCREEN",            (int)vtfpp::ImageFormat::RGB888_BLUESCREEN, "RGB888_BLUESCREEN", NULL,
-//                "BGR888_BLUESCREEN",            (int)vtfpp::ImageFormat::BGR888_BLUESCREEN, "BGR888_BLUESCREEN", NULL,
-//                "ARGB8888",                     (int)vtfpp::ImageFormat::ARGB8888, "ARGB8888", NULL,
-//                "BGRA8888",                     (int)vtfpp::ImageFormat::BGRA8888, "BGRA8888", NULL,
-//                "DXT1",                         (int)vtfpp::ImageFormat::DXT1, "DXT1", NULL,
-//                "DXT3",                         (int)vtfpp::ImageFormat::DXT3, "DXT3", NULL,
-//                "DXT5",                         (int)vtfpp::ImageFormat::DXT5, "DXT5", NULL,
-//                "BGRX8888",                     (int)vtfpp::ImageFormat::BGRX8888, "BGRX8888", NULL,
-//                "BGR565",                       (int)vtfpp::ImageFormat::BGR565, "BGR565", NULL,
-//                "BGRX5551",                     (int)vtfpp::ImageFormat::BGRX5551, "BGRX5551", NULL,
-//                "BGRA4444",                     (int)vtfpp::ImageFormat::BGRA4444, "BGRA4444", NULL,
-//                "DXT1_ONE_BIT_ALPHA",           (int)vtfpp::ImageFormat::DXT1_ONE_BIT_ALPHA, "DXT1_ONE_BIT_ALPHA", NULL,
-//                "BGRA5551",                     (int)vtfpp::ImageFormat::BGRA5551, "BGRA5551", NULL,
-//                "UV88",                         (int)vtfpp::ImageFormat::UV88, "UV88", NULL,
-//                "UVWQ8888",                     (int)vtfpp::ImageFormat::UVWQ8888, "UVWQ8888", NULL,
-//                "RGBA16161616F",                (int)vtfpp::ImageFormat::RGBA16161616F, "RGBA16161616F", NULL,
-//                "RGBA16161616",                 (int)vtfpp::ImageFormat::RGBA16161616, "RGBA16161616", NULL,
-//                "UVLX8888",                     (int)vtfpp::ImageFormat::UVLX8888, "UVLX8888", NULL,
-//                "R32F",                         (int)vtfpp::ImageFormat::R32F, "R32F", NULL,
-//                "RGB323232F",                   (int)vtfpp::ImageFormat::RGB323232F, "RGB323232F", NULL,
-//                "RGBA32323232F",                (int)vtfpp::ImageFormat::RGBA32323232F, "RGBA32323232F", NULL,
-//
-//                "RG1616F",                      (int)vtfpp::ImageFormat::RG1616F, "RG1616F", NULL,
-//                "RG3232F",                      (int)vtfpp::ImageFormat::RG3232F, "RG3232F", NULL,
-//                "RGBX8888",                     (int)vtfpp::ImageFormat::RGBX8888, "RGBX8888", NULL,
-//                "EMPTY",                        (int)vtfpp::ImageFormat::EMPTY, "EMPTY", NULL,
-//                "ATI2N",                        (int)vtfpp::ImageFormat::ATI2N, "ATI2N", NULL,
-//                "ATI1N",                        (int)vtfpp::ImageFormat::ATI1N, "ATI1N", NULL,
-//                "RGBA1010102",                  (int)vtfpp::ImageFormat::RGBA1010102, "RGBA1010102", NULL,
-//                "BGRA1010102",                  (int)vtfpp::ImageFormat::BGRA1010102, "BGRA1010102", NULL,
-//                "R16F",                         (int)vtfpp::ImageFormat::R16F, "R16F", NULL,
-//
-//                "CONSOLE_BGRX8888_LINEAR",      (int)vtfpp::ImageFormat::CONSOLE_BGRX8888_LINEAR, "CONSOLE_BGRX8888_LINEAR", NULL,
-//                "CONSOLE_RGBA8888_LINEAR",      (int)vtfpp::ImageFormat::CONSOLE_RGBA8888_LINEAR, "CONSOLE_RGBA8888_LINEAR", NULL,
-//                "CONSOLE_ABGR8888_LINEAR",      (int)vtfpp::ImageFormat::CONSOLE_ABGR8888_LINEAR, "CONSOLE_ABGR8888_LINEAR", NULL,
-//                "CONSOLE_ARGB8888_LINEAR",      (int)vtfpp::ImageFormat::CONSOLE_ARGB8888_LINEAR, "CONSOLE_ARGB8888_LINEAR", NULL,
-//                "CONSOLE_BGRA8888_LINEAR",      (int)vtfpp::ImageFormat::CONSOLE_BGRA8888_LINEAR, "CONSOLE_BGRA8888_LINEAR", NULL,
-//                "CONSOLE_RGB888_LINEAR",        (int)vtfpp::ImageFormat::CONSOLE_RGB888_LINEAR, "CONSOLE_RGB888_LINEAR", NULL,
-//                "CONSOLE_BGR888_LINEAR",        (int)vtfpp::ImageFormat::CONSOLE_BGR888_LINEAR, "CONSOLE_BGR888_LINEAR", NULL,
-//                "CONSOLE_BGRX5551_LINEAR",      (int)vtfpp::ImageFormat::CONSOLE_BGRX5551_LINEAR, "CONSOLE_BGRX5551_LINEAR", NULL,
-//                "CONSOLE_I8_LINEAR",            (int)vtfpp::ImageFormat::CONSOLE_I8_LINEAR, "CONSOLE_I8_LINEAR", NULL,
-//                "CONSOLE_RGBA16161616_LINEAR",  (int)vtfpp::ImageFormat::CONSOLE_RGBA16161616_LINEAR, "CONSOLE_RGBA16161616_LINEAR", NULL,
-//                "CONSOLE_BGRX8888_LE",          (int)vtfpp::ImageFormat::CONSOLE_BGRX8888_LE, "CONSOLE_BGRX8888_LE", NULL,
-//                "CONSOLE_BGRA8888_LE",          (int)vtfpp::ImageFormat::CONSOLE_BGRA8888_LE, "CONSOLE_BGRA8888_LE", NULL,
-//
-//                "R8",                           (int)vtfpp::ImageFormat::R8, "R8", NULL,
-//                "BC7",                          (int)vtfpp::ImageFormat::BC7, "BC7", NULL,
-//                "BC6H",                         (int)vtfpp::ImageFormat::BC6H, "BC6H", NULL,
-//                NULL
-//        );
-//
         gimp_procedure_add_choice_argument(
                 procedure,
                 "image_alpha_format",
@@ -346,7 +284,6 @@ static GimpProcedure *gimp_vtf_create_procedure(GimpPlugIn *plugin, const gchar 
                 "\nRecommended: RGBA8888 for regular textures with alpha"
                 "\nIf you're developing specifically for an engine based on Strata Source, then use BC7.",
                 choice_image_format,
-                // TODO: Change this selection based on whether or not the current image has alpha?
                 "RGBA8888",
                 G_PARAM_READWRITE
                 );
