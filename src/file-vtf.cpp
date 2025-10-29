@@ -148,6 +148,60 @@ static GimpProcedure *gimp_vtf_create_procedure(GimpPlugIn *plugin, const gchar 
             G_PARAM_READWRITE
         );
 
+        GimpChoice* compression_type_choice = gimp_choice_new_with_values(
+                "Deflate", (int)vtfpp::CompressionMethod::DEFLATE, "Deflate", NULL,
+                "ZSTD", (int)vtfpp::CompressionMethod::ZSTD, "ZSTD", NULL,
+                NULL
+                );
+
+        gimp_procedure_add_choice_argument(
+                procedure,
+                "compression_method",
+                "Compression Method",
+                "Compression Method (7.6 and up only!)",
+                compression_type_choice,
+                "Deflate",
+                G_PARAM_READWRITE
+                );
+
+        GimpChoice* compression_level_choice = gimp_choice_new_with_values(
+                "-1", -1, "Standard", "Makes a compromise and chooses a middle ground between compression speed and amount of compression.",
+                "0", 0, "0", NULL,
+                "1", 1, "1", NULL,
+                "2", 2, "2", NULL,
+                "3", 3, "3", NULL,
+                "4", 4, "4", NULL,
+                "5", 5, "5", NULL,
+                "6", 6, "6", NULL,
+                "7", 7, "7", NULL,
+                "8", 8, "8", NULL,
+                "9", 9, "9", NULL,
+                "10", 10, "10", NULL,
+                "11", 11, "11", NULL,
+                "12", 12, "12", NULL,
+                "13", 13, "13", NULL,
+                "14", 14, "14", NULL,
+                "15", 15, "15", NULL,
+                "16", 16, "16", NULL,
+                "17", 17, "17", NULL,
+                "18", 18, "18", NULL,
+                "19", 19, "19", NULL,
+                "20", 20, "20", NULL,
+                "21", 21, "21", NULL,
+                "22", 22, "22", NULL,
+                NULL
+                );
+
+        gimp_procedure_add_choice_argument(
+                procedure,
+                "compression_level",
+                "Compression Level",
+                "Compression Level (7.6 and up only!)",
+                compression_level_choice,
+                "-1",
+                G_PARAM_READWRITE
+                );
+
         // Image format (DXT5, RGBA8888, etc.)
         // TODO: Indent these better (I'm lazy)
         GimpChoice *choice_image_format = gimp_choice_new_with_values(
@@ -215,13 +269,87 @@ static GimpProcedure *gimp_vtf_create_procedure(GimpPlugIn *plugin, const gchar 
             "image_format",
             "Image format",
             "Image format to use."
-            "\nRecommended: DXT1 for regular textures without alpha, DXT5 for textures with alpha."
+            "\nRecommended: RGB888 for regular textures without alpha."
             "\nIf you're developing specifically for an engine based on Strata Source, then use BC7.",
             choice_image_format,
             // TODO: Change this selection based on whether or not the current image has alpha?
-            "DXT1",
+            "RGB888",
             G_PARAM_READWRITE
         );
+
+//        GimpChoice *choice_alpha_image_format = gimp_choice_new_with_values(
+//                "RGBA8888",                     (int)vtfpp::ImageFormat::RGBA8888, "RGBA8888", NULL,
+//                "ABGR8888",                     (int)vtfpp::ImageFormat::ABGR8888, "ABGR8888", NULL,
+//                "RGB888",                       (int)vtfpp::ImageFormat::RGB888, "RGB888", NULL,
+//                "BGR888",                       (int)vtfpp::ImageFormat::BGR888, "BGR888", NULL,
+//                "RGB565",                       (int)vtfpp::ImageFormat::RGB565, "RGB565", NULL,
+//                "I8",                           (int)vtfpp::ImageFormat::I8, "I8", NULL,
+//                "IA88",                         (int)vtfpp::ImageFormat::IA88, "IA88", NULL,
+//                "P8",                           (int)vtfpp::ImageFormat::P8, "P8", NULL,
+//                "A8",                           (int)vtfpp::ImageFormat::A8, "A8", NULL,
+//                "RGB888_BLUESCREEN",            (int)vtfpp::ImageFormat::RGB888_BLUESCREEN, "RGB888_BLUESCREEN", NULL,
+//                "BGR888_BLUESCREEN",            (int)vtfpp::ImageFormat::BGR888_BLUESCREEN, "BGR888_BLUESCREEN", NULL,
+//                "ARGB8888",                     (int)vtfpp::ImageFormat::ARGB8888, "ARGB8888", NULL,
+//                "BGRA8888",                     (int)vtfpp::ImageFormat::BGRA8888, "BGRA8888", NULL,
+//                "DXT1",                         (int)vtfpp::ImageFormat::DXT1, "DXT1", NULL,
+//                "DXT3",                         (int)vtfpp::ImageFormat::DXT3, "DXT3", NULL,
+//                "DXT5",                         (int)vtfpp::ImageFormat::DXT5, "DXT5", NULL,
+//                "BGRX8888",                     (int)vtfpp::ImageFormat::BGRX8888, "BGRX8888", NULL,
+//                "BGR565",                       (int)vtfpp::ImageFormat::BGR565, "BGR565", NULL,
+//                "BGRX5551",                     (int)vtfpp::ImageFormat::BGRX5551, "BGRX5551", NULL,
+//                "BGRA4444",                     (int)vtfpp::ImageFormat::BGRA4444, "BGRA4444", NULL,
+//                "DXT1_ONE_BIT_ALPHA",           (int)vtfpp::ImageFormat::DXT1_ONE_BIT_ALPHA, "DXT1_ONE_BIT_ALPHA", NULL,
+//                "BGRA5551",                     (int)vtfpp::ImageFormat::BGRA5551, "BGRA5551", NULL,
+//                "UV88",                         (int)vtfpp::ImageFormat::UV88, "UV88", NULL,
+//                "UVWQ8888",                     (int)vtfpp::ImageFormat::UVWQ8888, "UVWQ8888", NULL,
+//                "RGBA16161616F",                (int)vtfpp::ImageFormat::RGBA16161616F, "RGBA16161616F", NULL,
+//                "RGBA16161616",                 (int)vtfpp::ImageFormat::RGBA16161616, "RGBA16161616", NULL,
+//                "UVLX8888",                     (int)vtfpp::ImageFormat::UVLX8888, "UVLX8888", NULL,
+//                "R32F",                         (int)vtfpp::ImageFormat::R32F, "R32F", NULL,
+//                "RGB323232F",                   (int)vtfpp::ImageFormat::RGB323232F, "RGB323232F", NULL,
+//                "RGBA32323232F",                (int)vtfpp::ImageFormat::RGBA32323232F, "RGBA32323232F", NULL,
+//
+//                "RG1616F",                      (int)vtfpp::ImageFormat::RG1616F, "RG1616F", NULL,
+//                "RG3232F",                      (int)vtfpp::ImageFormat::RG3232F, "RG3232F", NULL,
+//                "RGBX8888",                     (int)vtfpp::ImageFormat::RGBX8888, "RGBX8888", NULL,
+//                "EMPTY",                        (int)vtfpp::ImageFormat::EMPTY, "EMPTY", NULL,
+//                "ATI2N",                        (int)vtfpp::ImageFormat::ATI2N, "ATI2N", NULL,
+//                "ATI1N",                        (int)vtfpp::ImageFormat::ATI1N, "ATI1N", NULL,
+//                "RGBA1010102",                  (int)vtfpp::ImageFormat::RGBA1010102, "RGBA1010102", NULL,
+//                "BGRA1010102",                  (int)vtfpp::ImageFormat::BGRA1010102, "BGRA1010102", NULL,
+//                "R16F",                         (int)vtfpp::ImageFormat::R16F, "R16F", NULL,
+//
+//                "CONSOLE_BGRX8888_LINEAR",      (int)vtfpp::ImageFormat::CONSOLE_BGRX8888_LINEAR, "CONSOLE_BGRX8888_LINEAR", NULL,
+//                "CONSOLE_RGBA8888_LINEAR",      (int)vtfpp::ImageFormat::CONSOLE_RGBA8888_LINEAR, "CONSOLE_RGBA8888_LINEAR", NULL,
+//                "CONSOLE_ABGR8888_LINEAR",      (int)vtfpp::ImageFormat::CONSOLE_ABGR8888_LINEAR, "CONSOLE_ABGR8888_LINEAR", NULL,
+//                "CONSOLE_ARGB8888_LINEAR",      (int)vtfpp::ImageFormat::CONSOLE_ARGB8888_LINEAR, "CONSOLE_ARGB8888_LINEAR", NULL,
+//                "CONSOLE_BGRA8888_LINEAR",      (int)vtfpp::ImageFormat::CONSOLE_BGRA8888_LINEAR, "CONSOLE_BGRA8888_LINEAR", NULL,
+//                "CONSOLE_RGB888_LINEAR",        (int)vtfpp::ImageFormat::CONSOLE_RGB888_LINEAR, "CONSOLE_RGB888_LINEAR", NULL,
+//                "CONSOLE_BGR888_LINEAR",        (int)vtfpp::ImageFormat::CONSOLE_BGR888_LINEAR, "CONSOLE_BGR888_LINEAR", NULL,
+//                "CONSOLE_BGRX5551_LINEAR",      (int)vtfpp::ImageFormat::CONSOLE_BGRX5551_LINEAR, "CONSOLE_BGRX5551_LINEAR", NULL,
+//                "CONSOLE_I8_LINEAR",            (int)vtfpp::ImageFormat::CONSOLE_I8_LINEAR, "CONSOLE_I8_LINEAR", NULL,
+//                "CONSOLE_RGBA16161616_LINEAR",  (int)vtfpp::ImageFormat::CONSOLE_RGBA16161616_LINEAR, "CONSOLE_RGBA16161616_LINEAR", NULL,
+//                "CONSOLE_BGRX8888_LE",          (int)vtfpp::ImageFormat::CONSOLE_BGRX8888_LE, "CONSOLE_BGRX8888_LE", NULL,
+//                "CONSOLE_BGRA8888_LE",          (int)vtfpp::ImageFormat::CONSOLE_BGRA8888_LE, "CONSOLE_BGRA8888_LE", NULL,
+//
+//                "R8",                           (int)vtfpp::ImageFormat::R8, "R8", NULL,
+//                "BC7",                          (int)vtfpp::ImageFormat::BC7, "BC7", NULL,
+//                "BC6H",                         (int)vtfpp::ImageFormat::BC6H, "BC6H", NULL,
+//                NULL
+//        );
+//
+        gimp_procedure_add_choice_argument(
+                procedure,
+                "image_alpha_format",
+                "Alpha Image format",
+                "Image format to use."
+                "\nRecommended: RGBA8888 for regular textures with alpha"
+                "\nIf you're developing specifically for an engine based on Strata Source, then use BC7.",
+                choice_image_format,
+                // TODO: Change this selection based on whether or not the current image has alpha?
+                "RGBA8888",
+                G_PARAM_READWRITE
+                );
 
         // Type (Standard, Environment Map, Volumetric Texture)
         GimpChoice *choice_image_type = gimp_choice_new_with_values(
@@ -422,61 +550,95 @@ static GimpImage *load_image(GFile *file, GError **error) {
     //  VTF has grayscale formats, not sure if it has indexed ones.
     //  Will have to change type based on the file format detected.
 
+    auto hasAlpa = vtfpp::ImageFormatDetails::transparent(vtf_file.getFormat());
+
+    vtfpp::ImageFormat container = vtfpp::ImageFormatDetails::containerFormat(vtf_file.getFormat());
+    GimpPrecision fmt;
+    std::string encoding;
+    GimpImageBaseType type = GIMP_RGB;
+    switch (container) {
+        case vtfpp::ImageFormat::RGBA32323232F:
+            fmt = GIMP_PRECISION_FLOAT_NON_LINEAR;
+            container = hasAlpa ? container : vtfpp::ImageFormat::RGB323232F;
+            encoding = hasAlpa ? "R'G'B'A float" : "R'G'B float";
+            break;
+        case vtfpp::ImageFormat::RGBA16161616:
+            fmt = GIMP_PRECISION_HALF_NON_LINEAR;
+            encoding = "R'G'B'A half";
+            break;
+        case vtfpp::ImageFormat::RGBA8888:
+        default:
+            fmt = GIMP_PRECISION_U8_NON_LINEAR;
+            container = hasAlpa ? container : vtfpp::ImageFormat::RGB888;
+            encoding = hasAlpa ? "R'G'B'A u8" : "R'G'B u8";
+    }
+
+    if(vtf_file.getFormat() == vtfpp::ImageFormat::I8 || vtf_file.getFormat() == vtfpp::ImageFormat::A8)
+    {
+        fmt = GIMP_PRECISION_U8_NON_LINEAR;
+        encoding = "Y' u8";
+        container = vtf_file.getFormat();
+        type = GIMP_GRAY;
+    }
+
     GimpImage *image = gimp_image_new_with_precision(
         width,
         height,
-        GIMP_RGB,
-        GIMP_PRECISION_U8_NON_LINEAR
+        type,
+        fmt
     );
 
     // For each frame, for each face
     // https://developer.valvesoftware.com/wiki/VTF_(Valve_Texture_Format)#Image_data_formats
     int frame_count = vtf_file.getFrameCount();
     int face_count = vtf_file.getFaceCount();
+    int slice_count = vtf_file.getSliceCount();
     int layer_number = 0;
     for (int fr_i = 0; fr_i < frame_count; fr_i++) {
         for (int fa_i = 0; fa_i < face_count; fa_i++) {
-            gchar *layer_name = g_strdup_printf("Layer %.3d", layer_number + 1);
-            layer_number++;
-            
-            // TODO: same as before, but for GimpImageType
-            //  We'll just use GIMP_RGBA_IMAGE for now (RGB with alpha)
-            GimpLayer *layer = gimp_layer_new(
-                image,
-                layer_name,
-                width,
-                height,
-                GIMP_RGBA_IMAGE,
-                100,
-                gimp_image_get_default_new_layer_mode(image)
-            );
-            gimp_image_insert_layer(image, layer, NULL, 0);
-            g_free(layer_name);
+            for(int sl_i = 0; sl_i < slice_count; sl_i++) {
+                gchar *layer_name = g_strdup_printf("Layer %.3d", layer_number + 1);
+                layer_number++;
 
-            GeglBuffer *buffer = gimp_drawable_get_buffer(GIMP_DRAWABLE(layer));
-            std::vector<std::byte> image_data_rgba = vtf_file.getImageDataAsRGBA8888(0, fr_i, fa_i, 0);
+                // TODO: same as before, but for GimpImageType
+                //  We'll just use GIMP_RGBA_IMAGE for now (RGB with alpha)
+                GimpLayer *layer = gimp_layer_new(
+                        image,
+                        layer_name,
+                        width,
+                        height,
+                        type == GIMP_GRAY ? GIMP_GRAY_IMAGE : (hasAlpa ? GIMP_RGBA_IMAGE : GIMP_RGB_IMAGE),
+                        100,
+                        gimp_image_get_default_new_layer_mode(image)
+                );
+                gimp_image_insert_layer(image, layer, NULL, 0);
+                g_free(layer_name);
 
-            // Get the bits per pixel for the RGBA8888 format (the one we're using above)
-            // Divide by 8 to get bytes
-            int bpp = vtfpp::ImageFormatDetails::bpp(vtfpp::ImageFormat::RGBA8888) / 8;
-            uint8_t *dst_buf = g_new(uint8_t, width * height * bpp);
-            for (int i = 0; i < image_data_rgba.size(); i++) {
-                dst_buf[i] = (uint8_t)image_data_rgba[i];
+                GeglBuffer *buffer = gimp_drawable_get_buffer(GIMP_DRAWABLE(layer));
+                std::vector<std::byte> image_data_rgba = vtf_file.getImageDataAs(container ,0, fr_i, fa_i, sl_i);
+
+                // Get the bits per pixel for the RGBA8888 format (the one we're using above)
+                // Divide by 8 to get bytes
+                int bpp = vtfpp::ImageFormatDetails::bpp(container) / 8;
+                uint8_t *dst_buf = g_new(uint8_t, width * height * bpp);
+                for (int i = 0; i < image_data_rgba.size(); i++) {
+                    dst_buf[i] = (uint8_t) image_data_rgba[i];
+                }
+
+                gegl_buffer_set(
+                        buffer,
+                        GEGL_RECTANGLE(0, 0, width, height),
+                        0,
+                        babl_format_with_space(
+                                encoding.c_str(),
+                                gimp_drawable_get_format(GIMP_DRAWABLE(layer))
+                        ),
+                        dst_buf,
+                        GEGL_AUTO_ROWSTRIDE
+                );
+
+                g_object_unref(buffer);
             }
-
-            gegl_buffer_set(
-                buffer,
-                GEGL_RECTANGLE(0, 0, width, height),
-                0,
-                babl_format_with_space(
-                    "R'G'B'A u8",
-                    gimp_drawable_get_format(GIMP_DRAWABLE(layer))
-                ),
-                dst_buf,
-                GEGL_AUTO_ROWSTRIDE
-            );
-
-            g_object_unref(buffer);
         }
     }
 
@@ -615,7 +777,10 @@ static gboolean export_dialog(
         GIMP_PROCEDURE_DIALOG(dialog),
         "image_type",
         "version",
+        "compression_method",
+        "compression_level",
         "image_format",
+        "image_alpha_format",
         "mipmap_filter",
         "resize_method",
         "bumpmap_scale",
@@ -646,8 +811,11 @@ static gboolean export_image(GFile *file,
 ) {
     // This is specifically the VTF minor version. So if the user chose 7.4, this would be '4'
     int file_version;
+    vtfpp::CompressionMethod compression_method;
+    int compression_level;
     // Image format (DXT1, RGBA8888, etc.)
     vtfpp::ImageFormat image_format;
+    vtfpp::ImageFormat image_alpha_format;
     // TODO (image types):
     //  - If standard, do nothing special.
     //  - If environment map, set related flag, and use CreationOptions.isCubeMap
@@ -676,9 +844,12 @@ static gboolean export_image(GFile *file,
     }
 
     file_version = gimp_procedure_config_get_choice_id(config, "version");
+    compression_method = (vtfpp::CompressionMethod) gimp_procedure_config_get_choice_id(config, "compression_method");
+    compression_level = gimp_procedure_config_get_choice_id(config, "compression_level");
     image_type = (VTFImageType)gimp_procedure_config_get_choice_id(config, "image_type");
     mipmap_filter = gimp_procedure_config_get_choice_id(config, "mipmap_filter");
     image_format = (vtfpp::ImageFormat)gimp_procedure_config_get_choice_id(config, "image_format");
+    image_alpha_format = (vtfpp::ImageFormat)gimp_procedure_config_get_choice_id(config, "image_alpha_format");
     resize_method = (vtfpp::ImageConversion::ResizeMethod)gimp_procedure_config_get_choice_id(config, "resize_method");
     g_object_get(
         config,
@@ -688,6 +859,21 @@ static gboolean export_image(GFile *file,
         "bumpmap_scale",                    &bumpmap_scale,
         NULL
     );
+
+    int layer_count = g_list_length(drawables);
+    for(int i = 0; i < layer_count; i++)
+    {
+        GList *layer_at_nth = g_list_nth(drawables, i);
+        GimpDrawable *drawable_for_this_layer = GIMP_DRAWABLE(layer_at_nth->data);
+        if(gimp_drawable_has_alpha(drawable_for_this_layer))
+        {
+            image_format = image_alpha_format;
+            break;
+        }
+    }
+    if(compression_method == vtfpp::CompressionMethod::DEFLATE && compression_level > 9)
+        compression_level = 9; // Deflate compression only goes up to 9.
+
 
     // Get width and height of the GIMP image
     GimpDrawable *drawable_reference = GIMP_DRAWABLE(drawables->data);
@@ -699,21 +885,26 @@ static gboolean export_image(GFile *file,
     // Set up some basic information in the exported VTF
     vtfpp::VTF export_vtf;
     export_vtf.setVersion(7, file_version);
+    if(file_version > 5)
+    {
+        export_vtf.setCompressionMethod(compression_method);
+        export_vtf.setCompressionLevel(compression_level);
+    }
     // SRGB flag (the standard color space GIMP uses)
     export_vtf.setFlags(vtfpp::VTF::FLAG_PWL_CORRECTED);
-    export_vtf.setImageResizeMethods(resize_method, resize_method);
-    export_vtf.setSize(width, height, vtfpp::ImageConversion::ResizeFilter::DEFAULT);
 
     // Set images inside the VTF
     // TODO: export multiple layers as multiple frames (& equivalent for faces)
-    int layer_count = g_list_length(drawables);
+
 
     // Depending on whether the image is a standard image or envmap/volumetric,
     //  write the images either as frames or as faces
     if (image_type == VTFImageType::TYPE_STANDARD) {
         export_vtf.setFrameCount(layer_count);
-    } else {
+    } else if (image_type == VTFImageType::TYPE_ENVIRONMENT_MAP) {
         export_vtf.setFaceCount(true, layer_count >= 7);
+    } else {
+        export_vtf.setSliceCount(layer_count);
     }
 
     for (int layer_index = 0; layer_index < layer_count; layer_index++) {
@@ -721,7 +912,11 @@ static gboolean export_image(GFile *file,
         GimpDrawable *drawable_for_this_layer = GIMP_DRAWABLE(layer_at_nth->data);
         GeglBuffer *buffer_for_this_layer = gimp_drawable_get_buffer(drawable_for_this_layer);
 
-        int bpp = vtfpp::ImageFormatDetails::bpp(vtfpp::ImageFormat::RGBA8888) / 8;
+        GimpImageType drawable_type = gimp_drawable_type(drawable_for_this_layer);
+
+        auto gimp_format = gimp_drawable_get_format(drawable_for_this_layer);
+        int bpp = babl_format_get_bytes_per_pixel(gimp_format);
+
         int file_bytes_count = width * height * bpp;
         // Take bytes from the GIMP drawable buffer and put it in this vector
         uint8_t *raw_bytes = g_new(uint8_t, file_bytes_count);
@@ -729,7 +924,7 @@ static gboolean export_image(GFile *file,
             buffer_for_this_layer,
             GEGL_RECTANGLE(0, 0, width, height),
             1.0,
-            gimp_drawable_get_format(drawable_for_this_layer),
+            gimp_format,
             raw_bytes,
             GEGL_AUTO_ROWSTRIDE,
             GEGL_ABYSS_NONE
@@ -739,6 +934,7 @@ static gboolean export_image(GFile *file,
         // The vtfpp library can't seem to interface with uint8_t directly, so we have to
         //  move data to a vector
         std::vector<std::byte> raw_bytes_vec;
+        raw_bytes_vec.reserve(file_bytes_count);
         for (int i = 0; i < file_bytes_count; i++) {
             raw_bytes_vec.push_back((std::byte)raw_bytes[i]);
         }
@@ -747,10 +943,13 @@ static gboolean export_image(GFile *file,
         //  write the images either as frames or as faces
         uint16_t frame_index = 0;
         uint8_t face_index = 0;
+        uint16_t slice_index = 0;
         if (image_type == VTFImageType::TYPE_STANDARD) {
             frame_index = layer_index;
-        } else {
+        } else if (image_type == VTFImageType::TYPE_ENVIRONMENT_MAP) {
             face_index = layer_index;
+        } else {
+            slice_index = layer_index;
         }
 
         // Take the bytes from the vector and parse it as a VTF image layer
@@ -759,7 +958,7 @@ static gboolean export_image(GFile *file,
             // Because the raw_bytes_vec is stored using 4 bytes per pixel,
             //  we *must* use RGBA8888 when we initially import from the GIMP layers to the VTF.
             // However, the user's selected VTF format will still be respected once we write to disk.
-            vtfpp::ImageFormat::RGBA8888,
+            has_alpha ? vtfpp::ImageFormat::RGBA8888 : vtfpp::ImageFormat::RGB888,
             width,
             height,
             // This is specifically the resize method used when the user gives the image in GIMP
@@ -771,7 +970,7 @@ static gboolean export_image(GFile *file,
             0,
             frame_index,
             face_index,
-            0
+            slice_index
         );
 
         if (!bytes_to_image_successful) {
@@ -780,6 +979,8 @@ static gboolean export_image(GFile *file,
         }
     }
 
+    export_vtf.setImageResizeMethods(vtfpp::ImageConversion::ResizeMethod::NONE, vtfpp::ImageConversion::ResizeMethod::NONE);
+    export_vtf.setSize(width, height, vtfpp::ImageConversion::ResizeFilter::DEFAULT);
     //
     // Compute VTF settings
     //
