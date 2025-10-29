@@ -332,9 +332,10 @@ static GimpProcedure *gimp_vtf_create_procedure(GimpPlugIn *plugin, const gchar 
 
         // Resize method (how to resize the image when the width and height aren't a power-of-two)
         GimpChoice *choice_resize_method = gimp_choice_new_with_values(
-            "bigger",   (int)vtfpp::ImageConversion::ResizeMethod::POWER_OF_TWO_BIGGER,     "Power of two (bigger)", NULL,
+            "bigger",   (int)vtfpp::ImageConversion::ResizeMethod::POWER_OF_TWO_BIGGER,     "Power of two (bigger)",  NULL,
             "smaller",  (int)vtfpp::ImageConversion::ResizeMethod::POWER_OF_TWO_SMALLER,    "Power of two (smaller)", NULL,
             "nearest",  (int)vtfpp::ImageConversion::ResizeMethod::POWER_OF_TWO_NEAREST,    "Power of two (nearest)", NULL,
+            "none",     (int)vtfpp::ImageConversion::ResizeMethod::NONE,                    "None",                   NULL,
             NULL
         );
         gimp_procedure_add_choice_argument(
@@ -833,8 +834,8 @@ static gboolean export_image(GFile *file,
     // Set images inside the VTF
     // TODO: export multiple layers as multiple frames (& equivalent for faces)
 
+    export_vtf.setImageResizeMethods(resize_method, resize_method);
     export_vtf.setSize(width, height, vtfpp::ImageConversion::ResizeFilter::DEFAULT);
-
     // Depending on whether the image is a standard image or envmap/volumetric,
     //  write the images either as frames or as faces
     if (image_type == VTFImageType::TYPE_STANDARD) {
@@ -917,7 +918,6 @@ static gboolean export_image(GFile *file,
         }
     }
 
-    export_vtf.setImageResizeMethods(resize_method, resize_method);
     //
     // Compute VTF settings
     //
