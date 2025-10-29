@@ -507,7 +507,7 @@ static GimpImage *load_image(GFile *file, GError **error) {
         default:
             fmt = GIMP_PRECISION_U8_NON_LINEAR;
             container = hasAlpa ? container : vtfpp::ImageFormat::RGB888;
-            encoding = hasAlpa ? "R'G'B'A u8" : "R'G'B u8";
+            encoding = hasAlpa ? "R'G'B'A u8" : "R'G'B' u8";
     }
 
     if(vtf_file.getFormat() == vtfpp::ImageFormat::I8 || vtf_file.getFormat() == vtfpp::ImageFormat::A8)
@@ -833,6 +833,7 @@ static gboolean export_image(GFile *file,
     // Set images inside the VTF
     // TODO: export multiple layers as multiple frames (& equivalent for faces)
 
+    export_vtf.setSize(width, height, vtfpp::ImageConversion::ResizeFilter::DEFAULT);
 
     // Depending on whether the image is a standard image or envmap/volumetric,
     //  write the images either as frames or as faces
@@ -916,8 +917,7 @@ static gboolean export_image(GFile *file,
         }
     }
 
-    export_vtf.setImageResizeMethods(vtfpp::ImageConversion::ResizeMethod::NONE, vtfpp::ImageConversion::ResizeMethod::NONE);
-    export_vtf.setSize(width, height, vtfpp::ImageConversion::ResizeFilter::DEFAULT);
+    export_vtf.setImageResizeMethods(resize_method, resize_method);
     //
     // Compute VTF settings
     //
